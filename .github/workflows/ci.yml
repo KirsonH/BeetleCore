@@ -1,0 +1,36 @@
+name: BeetleCore Engine - Continuous Integration
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Descargar el código del repositorio
+    - name: Checkout Source Code
+      uses: actions/checkout@v4
+
+    # 2. Configurar el entorno de Java 26 usando Temurin o el JDK disponible
+    - name: Set up JDK 26
+      uses: actions/setup-java@v4
+      with:
+        java-version: '26'
+        distribution: 'temurin' # Distribución estable y recomendada de Eclipse
+        cache: 'maven'
+
+    # 3. Compilar y verificar el proyecto con Maven
+    - name: Compile and Test with Maven
+      run: |
+        cd bc-service-engine
+        mvn -B clean verify
+
+    # 4. Opcional: Reportar estado del build
+    - name: Build Status Notification
+      if: always()
+      run: |
+        echo "La compilación con Java 26 finalizó con estado: ${{ job.status }}"
