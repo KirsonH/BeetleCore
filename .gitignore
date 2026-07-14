@@ -1,0 +1,19 @@
+# Java Target & Binaries
+**/target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Node / React Frontend Dependencies & Builds
+**/node_modules/
+**/dist/
+**/.vite/
+.eslintcache
+
+# IDEs & System Files
+.DS_Store
+.idea/
+*.iml
+.vscode/
+*.log

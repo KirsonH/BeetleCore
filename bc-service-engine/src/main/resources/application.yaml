@@ -1,0 +1,24 @@
+beetlecore:
+  server:
+    port: ${BEETLECORE_PORT:-8080}
+  datasources:
+    default:
+      url: ${BEETLECORE_DB_URL:-jdbc:postgresql://localhost:5432/beetlecore_db}
+      user: ${BEETLECORE_DB_USER:-beetle_admin}
+      pass: ${BEETLECORE_DB_PASS:-secure_password_2026}
+      pool-size: 10
+    sidecar-audit:
+      url: ${BEETLECORE_AUDIT_DB_URL:-jdbc:postgresql://localhost:5432/beetlecore_audit_db}
+      user: ${BEETLECORE_AUDIT_DB_USER:-beetle_audit_admin}
+      pass: ${BEETLECORE_AUDIT_DB_PASS:-secure_audit_password}
+      pool-size: 5
+  sql:
+    insertLedger: "INSERT INTO %s (transaction_code, is_sandbox, system, open_banking_consent_id, token, tenant_id, branch_id, book_id, system_locale, system_timezone, system_currency, geolocation, data_jurisdiction, operator_id, client_session_id, payload, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())"
+    insertAtom: "INSERT INTO bc_data.entity_atoms (lineage_id, tenant_id, branch_id, book_id, payload, created_at) VALUES (?, ?, ?, ?, ?, NOW())"
+    selectIdentity: "SELECT payload FROM bc_data.identity_security_atoms WHERE federated_identity_id = ? ORDER BY created_at DESC LIMIT 1"
+    selectPolicy: "SELECT policy_document FROM bc_config.access_control_policies WHERE enabled = true ORDER BY updated_at DESC LIMIT 1"
+  policy:
+    engine:
+      endpoint: ${BEETLECORE_POLICY_ENGINE_ENDPOINT:-}
+    document:
+      allow: true
